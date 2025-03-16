@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import { userRouter } from "./routers/user.router";
+import { productRouter } from "./routers/product.router";
+import { seedinitialProducts } from "./servers/productServes";
 
 const app = express();
 const PORT = 3001;
@@ -15,13 +17,17 @@ mongoose
   })
   .catch((error) => console.error("Error connecting to MongoDB:", error));
 
+// seed products to database
+seedinitialProducts();
+
 // test api
 app.get("/test", (req, res) => {
   res.send("Hello World!");
 });
 
-// Students router
+// app routers
 app.use("/users", userRouter);
+app.use("/products", productRouter);
 
 // Start the server
 app.listen(PORT, () => {
