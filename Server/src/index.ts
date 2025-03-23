@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { userRouter } from "./routers/user.router";
 import { productRouter } from "./routers/product.router";
 import { seedinitialProducts } from "./servers/productServes";
+import { cartRouter } from "./routers/cart.router";
 
 const app = express();
 const PORT = 3001;
@@ -28,6 +29,7 @@ app.get("/test", (req, res) => {
 // app routers
 app.use("/users", userRouter);
 app.use("/products", productRouter);
+app.use("/cart", cartRouter);
 
 // Start the server
 app.listen(PORT, () => {

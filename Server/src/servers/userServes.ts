@@ -57,10 +57,10 @@ export const login = async ({ email, password }: LoginParams) => {
 
   if (passwordMatch) {
     return {
+      email,
       data: genereateJWT({
         firstName: user.firstName,
         lastName: user.lastName,
-        email,
       }),
       statusCode: 200,
     };
@@ -70,5 +70,9 @@ export const login = async ({ email, password }: LoginParams) => {
 };
 
 const genereateJWT = (data: any) => {
-  return jwt.sign(data, "xR3hwh0X0j1MyI3s", { expiresIn: "24h" });
+  return jwt.sign(
+    data,
+    "9X0BFeDWA5Z6LBFp0Y81AXkUrT7dfHEsvV1ebygdOCMKqNvNSwY3snbCRF83fLoN"
+    // ,{ expiresIn: "24h" }
+  );
 };
