@@ -1,10 +1,4 @@
 import { Request } from "express";
-
-declare module "express-serve-static-core" {
-  interface Request {
-    user?: {
-      _id: string;
-      // Add other user properties if needed
-    };
-  }
+export interface ExtendRequest extends Request {
+  user?: any;
 }
