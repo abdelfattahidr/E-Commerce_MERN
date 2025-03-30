@@ -1,5 +1,9 @@
 import express from "express";
-import { addProductToCart, getActiveCartForUser } from "../servers/cartServes";
+import {
+  addProductToCart,
+  getActiveCartForUser,
+  updateProductToCart,
+} from "../servers/cartServes";
 import validateJWT from "../middlewares/validateJWT";
 import { ExtendRequest } from "../types/express";
 const router = express.Router();
@@ -15,7 +19,13 @@ router
     const userId = req?.user?._id;
     const { productId, quantity } = req.body;
     const response = await addProductToCart({ userId, productId, quantity });
-    res.status(response.statusCode as number).json(response.data);
+    res.status(response.statusCode).json(response.data);
+  })
+  .put("/", validateJWT, async (req: ExtendRequest, res) => {
+    const userId = req?.user?._id;
+    const { productId, quantity } = req.body;
+    const response = await updateProductToCart({ userId, productId, quantity });
+    res.status(response.statusCode).json(response.data);
   });
 
 export { router as cartRouter };
