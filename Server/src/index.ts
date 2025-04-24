@@ -5,12 +5,14 @@ import { userRouter } from "./routers/user.router";
 import { productRouter } from "./routers/product.router";
 import { seedinitialProducts } from "./servers/productServes";
 import { cartRouter } from "./routers/cart.router";
+import  cors from "cors";
 
 dotenv.config();
 const app = express();
 const PORT = 3001;
 
 app.use(express.json());
+app.use(cors())
 
 // Connect to MongoDB
 mongoose
