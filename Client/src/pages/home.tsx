@@ -9,7 +9,7 @@ const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState(false);
   useEffect(() => {
-    fetch("http://localhost:3001/products/")
+    fetch(`${import.meta.env.VITE_API_URL}/products`)
       .then(async (response) => {
         const data = await response.json();
         setProducts(data);

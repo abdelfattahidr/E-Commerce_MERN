@@ -1,14 +1,7 @@
 const Blocked = () => {
   return (
-    <div>
-      <h1>Access Denied</h1>
-      <p>
-        Your account has been blocked. Please contact support for assistance.
-      </p>
-      <button onClick={() => (window.location.href = "/")}>Go to Home</button>
-      <button onClick={() => (window.location.href = "/support")}>
-        Contact Support
-      </button>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <h1 className="text-4xl font-bold text-red-600">403 Forbidden</h1>
     </div>
   );
 };
