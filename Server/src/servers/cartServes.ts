@@ -172,7 +172,6 @@ export const checkout = async ({ userId, address }: checkout) => {
 
   const orderItems: IOrderItems[] = [];
 
-  //Done loop cartItems and create orderItems
   for (const item of cart.items) {
     const product = await productModel.findById(item.product);
 
@@ -198,8 +197,6 @@ export const checkout = async ({ userId, address }: checkout) => {
   });
 
   await order.save();
-
-  //Done update the cart status to be completed
   cart.status = "Comleted";
   await cart.save();
 

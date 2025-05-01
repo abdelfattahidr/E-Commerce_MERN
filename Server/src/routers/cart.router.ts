@@ -1,4 +1,4 @@
-import express, { json } from "express";
+import express from "express";
 import {
   addProductToCart,
   deleteProductFromCart,
@@ -17,7 +17,7 @@ router.get("/", validateJWT, async (req: ExtendRequest, res) => {
     const cart = await getActiveCartForUser({ userId });
     res.status(200).json(cart);
   } catch (error) {
-    res.status(500).send("Something went wrong ! :)");
+    res.status(500).json("Something went wrong ! :)");
   }
 });
 
@@ -28,7 +28,7 @@ router.post("/", validateJWT, async (req: ExtendRequest, res) => {
     const response = await addProductToCart({ userId, productId, quantity });
     res.status(response.statusCode).json(response.data);
   } catch (error) {
-    res.status(500).send("Something went wrong ! :)");
+    res.status(500).json("Something went wrong ! :)");
   }
 });
 
@@ -39,7 +39,7 @@ router.put("/", validateJWT, async (req: ExtendRequest, res) => {
     const response = await updateProductToCart({ userId, productId, quantity });
     res.status(response.statusCode).json(response.data);
   } catch (error) {
-    res.status(500).send("Something went wrong ! :)");
+    res.status(500).json("Something went wrong ! :)");
   }
 });
 
@@ -53,7 +53,7 @@ router.delete(
       const response = await deleteProductFromCart({ userId, productId });
       res.status(response.statusCode).json(response.data);
     } catch (error) {
-      res.status(500).send("Something went wrong ! :)");
+      res.status(500).json("Something went wrong ! :)");
     }
   }
 );
@@ -64,7 +64,7 @@ router.delete("/", validateJWT, async (req: ExtendRequest, res) => {
     const response = await clearCart({ userId });
     res.status(response.statusCode).json(response.data);
   } catch (error) {
-    res.status(500).send("Something went wrong ! :)");
+    res.status(500).json("Something went wrong ! :)");
   }
 });
 
@@ -75,7 +75,7 @@ router.post("/checkout", validateJWT, async (req: ExtendRequest, res) => {
     const response = await checkout({ userId, address });
     res.status(response.statusCode).json(response.data);
   } catch (error) {
-    res.status(500).send("Something went wrong ! :)");
+    res.status(500).json("Something went wrong ! :)");
   }
 });
 

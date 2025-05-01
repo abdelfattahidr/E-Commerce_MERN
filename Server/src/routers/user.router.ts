@@ -14,7 +14,7 @@ router.post("/register", async (req, res) => {
     });
     res.status(statusCode).json(data);
   } catch (error) {
-    res.status(500).send("Something went wrong ! :)");
+    res.status(500).json("Something went wrong ! :)");
   }
 });
 
@@ -24,7 +24,7 @@ router.post("/login", async (req, res) => {
     const { data, statusCode } = await login({ email, password });
     res.status(statusCode).json(data);
   } catch (error) {
-    res.status(500).send("Something went wrong ! :)");
+    res.status(500).json("Something went wrong ! :)");
   }
 });
 
