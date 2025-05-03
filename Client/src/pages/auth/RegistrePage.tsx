@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useRef, useState } from "react";
+import { useAth } from "../../context/Auth/AuthContext";
 
 const RegistrePage = () => {
   const [error, setError] = useState("");
@@ -13,12 +14,19 @@ const RegistrePage = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
 
+  const { login } = useAth();
+
   const onSubmit = async () => {
     const firstName = FNameRef.current?.value;
     const lastName = LNameRef.current?.value;
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
     const passwordConfirm = passwordConfirmRef.current?.value;
+
+    if (!firstName || !lastName || !email || !passwordConfirm) {
+      setError("Please fill all fields");
+      return;
+    }
 
     if (password !== passwordConfirm) {
       setError("confirm your password");
@@ -42,13 +50,17 @@ const RegistrePage = () => {
     );
 
     if (!response.ok) {
-      // setError("Unable to register user");
-      // setError(response.data);
+      setError("Unable to register user");
       return;
     }
 
-    const data = await response.json();
-    console.log(data);
+    const token = await response.json();
+    if (!token) {
+      setError("Incorrect Token");
+      return;
+    }
+
+    login(email, token);
   };
   return (
     <Container>
@@ -62,6 +74,11 @@ const RegistrePage = () => {
         }}
       >
         <Typography variant="h4">Register new Account</Typography>
+        {error && (
+          <Typography variant="h6" sx={{ color: "red", textAlign: "center" }}>
+            {error}
+          </Typography>
+        )}
         <Box
           sx={{
             mt: 3,
@@ -69,8 +86,6 @@ const RegistrePage = () => {
             flexDirection: "column",
             gap: 1,
             width: "450px",
-            border: 1,
-            borderBlockColor: "#f5F",
             padding: 4,
           }}
         >
@@ -106,7 +121,6 @@ const RegistrePage = () => {
             label="Confirm Password"
             variant="outlined"
           />
-          {error && <Typography variant="h6" sx={{color:"red",textAlign:"center"}}>{error}</Typography>}
           <Button variant="contained" onClick={onSubmit}>
             Register
           </Button>
