@@ -11,12 +11,10 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useAth } from "../context/Auth/AuthContext";
-
-// const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import { Grid } from "@mui/material";
 
 function Navbar() {
-  const { username, token } = useAth();
+  const { username, isAuthenticated } = useAth();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -29,7 +27,9 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
-  console.log("form navbar ", { username, token });
+  const logout = () => {
+    setAnchorElUser(null);
+  };
 
   return (
     <AppBar position="static">
@@ -62,35 +62,83 @@ function Navbar() {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography sx={{ textAlign: "center" }}>
-                      {setting}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
+              {isAuthenticated ? (
+                <>
+                  <Tooltip title="Open settings">
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Grid>
+                        <Typography variant="h6">{username}</Typography>
+                      </Grid>
+                      <Grid>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                          <Avatar
+                            alt={username || ""}
+                            src="/static/images/avatar/2.jpg"
+                          />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Tooltip>
+                  <Menu
+                    sx={{ mt: "45px" }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography sx={{ textAlign: "center" }}>
+                        <a
+                          href="/profile/orders"
+                          style={{ color: "black", textDecoration: "none" }}
+                        >
+                          My Orders
+                        </a>
+                      </Typography>
+                    </MenuItem>
+
+                    <MenuItem onClick={logout}>
+                      <Typography sx={{ textAlign: "center" }}>
+                        <a
+                          href="/auth/logout"
+                          style={{ color: "black", textDecoration: "none" }}
+                        >
+                          Log Out
+                        </a>
+                      </Typography>
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  <a
+                    href="/auth/login"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <Typography variant="h6">Login</Typography>
+                  </a>
+                  <a
+                    href="/auth/register"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <Typography variant="h6">Register</Typography>
+                  </a>
+                </Box>
+              )}
             </Box>
           </Box>
         </Toolbar>
