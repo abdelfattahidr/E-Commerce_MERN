@@ -12,12 +12,14 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useAth } from "../context/Auth/AuthContext";
 import { Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
-  const { username, isAuthenticated } = useAth();
+  const { username, isAuthenticated, logout } = useAth();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -27,8 +29,10 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
-  const logout = () => {
-    setAnchorElUser(null);
+  const handleLogout = () => {
+    logout();
+    navigate("/auth/login");
+    handleCloseUserMenu();
   };
 
   return (
@@ -113,12 +117,19 @@ function Navbar() {
 
                     <MenuItem onClick={logout}>
                       <Typography sx={{ textAlign: "center" }}>
-                        <a
-                          href="/auth/logout"
-                          style={{ color: "black", textDecoration: "none" }}
+                        <button
+                          onClick={handleLogout}
+                          style={{
+                            color: "black",
+                            border: "none",
+                            background: "none",
+                            cursor: "pointer",
+                            fontSize: "16px",
+                            padding: "0",
+                          }}
                         >
                           Log Out
-                        </a>
+                        </button>
                       </Typography>
                     </MenuItem>
                   </Menu>

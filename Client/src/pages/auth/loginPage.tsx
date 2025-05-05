@@ -5,12 +5,13 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useRef, useState } from "react";
 import { useAth } from "../../context/Auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-
+  const navigate = useNavigate();
   const { login } = useAth();
 
   const onSubmit = async () => {
@@ -50,6 +51,7 @@ const LoginPage = () => {
     }
 
     login(email, token);
+    navigate("/");
   };
   return (
     <Container>
