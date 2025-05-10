@@ -2,10 +2,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import { useRef, useState } from "react";
 import { useAth } from "../../context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { FormControlLabel } from "@mui/material";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
@@ -95,6 +97,19 @@ const LoginPage = () => {
             id="password"
             label="Password"
             variant="outlined"
+          />
+          <FormControlLabel
+            control={<Checkbox id="ShowPassword" />}
+            label="Show Password"
+            onChange={
+              (e) => {
+                if (e.target.checked) {
+                  passwordRef.current?.setAttribute("type", "text");
+                } else {
+                  passwordRef.current?.setAttribute("type", "password");
+                }
+              }
+            }
           />
           <Button variant="contained" onClick={onSubmit}>
             Login

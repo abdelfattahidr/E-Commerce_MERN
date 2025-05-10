@@ -2,7 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import RegisterPage from "./pages/auth/RegistrePage";
 import { Home, Cart, Checkout, Blocked } from "./pages/index";
 import DefaultLayout from "./layout/DefaultLayout";
-import LoginPage from './pages/auth/loginPage';
+import LoginPage from "./pages/auth/loginPage";
+import ProtedRroute from "./components/ProtedRroute";
 
 const router = createBrowserRouter([
   {
@@ -15,16 +16,23 @@ const router = createBrowserRouter([
       },
       {
         path: "/cart",
-        element: <Cart />,
+        element: <ProtedRroute />,
+        children: [
+          {
+            path: "",
+            element: <Cart />,
+          },
+        ],
       },
       {
         path: "/checkout",
         element: <Checkout />,
       },
-    ]
+    ],
   },
   {
     path: "/auth",
+    element: <DefaultLayout />,
     children: [
       {
         path: "register",

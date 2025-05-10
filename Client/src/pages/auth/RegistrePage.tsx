@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useRef, useState } from "react";
 import { useAth } from "../../context/Auth/AuthContext";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 const RegistrePage = () => {
   const [error, setError] = useState("");
@@ -13,6 +14,7 @@ const RegistrePage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
+  const [password,setPassword] = useState<boolean>(false);
 
   const { login } = useAth();
 
@@ -109,18 +111,31 @@ const RegistrePage = () => {
           />
           <TextField
             inputRef={passwordRef}
-            type="password"
+            type={password ?  "text": "password"}
             id="password"
             label="Password"
             variant="outlined"
-          />
+            />
           <TextField
             inputRef={passwordConfirmRef}
-            type="password"
+            type={password ?  "text": "password"}
             id="outlined-basic"
             label="Confirm Password"
             variant="outlined"
           />
+          <FormControlLabel
+                      control={<Checkbox id="ShowPassword" />}
+                      label="Show Password"
+                      onChange={
+                        (e) => {
+                          if (e.target.checked) {
+                            setPassword(true);
+                          } else {
+                            setPassword(false);
+                          }
+                        }
+                      }
+                    />
           <Button variant="contained" onClick={onSubmit}>
             Register
           </Button>
