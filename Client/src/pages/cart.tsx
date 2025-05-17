@@ -1,13 +1,3 @@
-/// <reference types="vite/client" />
-
-interface ImportMetaEnv {
-  readonly VITE_API_URL: string;
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}
-
 import { Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import { useEffect, useState } from "react";

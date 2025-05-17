@@ -3,12 +3,17 @@ import RegisterPage from "./pages/auth/RegistrePage";
 import { Home, Cart, Checkout, Blocked } from "./pages/index";
 import DefaultLayout from "./layout/DefaultLayout";
 import LoginPage from "./pages/auth/loginPage";
-import ProtedRroute from "./components/ProtedRroute";
+import ProtectedRoute from "./components/ProtedRroute";
+import CartProvider from "./context/cart/CartProvider";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <DefaultLayout />,
+    element: (
+      <CartProvider>
+        <DefaultLayout />
+      </CartProvider>
+    ),
     children: [
       {
         path: "/",
@@ -16,13 +21,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/cart",
-        element: <ProtedRroute />,
-        children: [
-          {
-            path: "",
-            element: <Cart />,
-          },
-        ],
+        element: (
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/checkout",

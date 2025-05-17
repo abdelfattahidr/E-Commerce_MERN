@@ -1,13 +1,16 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAth } from "../context/Auth/AuthContext";
 
-const ProtedRroute = () => {
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated } = useAth();
 
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" replace />;
   }
-  return <Outlet />;
+  return <>{children}</>;
 };
 
-export default ProtedRroute;
+export default ProtectedRoute;
