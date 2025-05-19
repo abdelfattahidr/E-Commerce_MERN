@@ -2,10 +2,11 @@ import { Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import { useEffect, useState } from "react";
 import { useAth } from "../context/Auth/AuthContext";
+import { useCart } from "../context/cart/CartContext";
 
 const Cart = () => {
   const { token } = useAth();
-  const [cart, setCart] = useState();
+  const { cartItems, totalAmount } = useCart();
   const [error, setError] = useState("");
   useEffect(() => {
     if (!token) {
@@ -23,19 +24,30 @@ const Cart = () => {
           setError("Failed to fetch cart");
         }
         const data = await response.json();
-        setCart(data);
+        
       } catch (error) {
         setError("Error fetching cart:" + error);
       }
     };
     fetchCart();
   }, [token]);
-  console.log(cart);
 
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h4">My Cart</Typography>
-      <p>Your cart is empty.</p>
+      {cartItems.length === 0 ? (
+        <Typography variant="h6">Your cart is empty</Typography>
+      ) : (
+        <div>
+          {cartItems.map((item) => (
+            <div key={item.productId} style={{ marginBottom: "20px" }}>
+              <Typography variant="h6">{item.title}</Typography>
+              <Typography variant="body1">Price: ${item.unitprice}</Typography>
+            </div>
+          ))}
+          <Typography variant="h5">Total: ${totalAmount}</Typography>
+        </div>
+      )}
       <button>Checkout</button>
     </Container>
   );

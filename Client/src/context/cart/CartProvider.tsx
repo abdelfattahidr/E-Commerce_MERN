@@ -1,14 +1,54 @@
-import { FC, PropsWithChildren,useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { FC, PropsWithChildren, useState } from "react";
 import { CartContext } from "./CartContext";
 import { CartItem } from "../../types/cartItems.type";
+import { useAth } from "../Auth/AuthContext";
 
 const CartProvider: FC<PropsWithChildren> = ({ children }) => {
+  const { token } = useAth();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
-  // const [error, setError] = useState("");
+  const [error, setError] = useState("");
 
-  const addItemToCart = (productID: string) => {
-    console.log("Adding product to cart:", productID);
+  const addItemToCart = async (productID: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/cart`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ productId: productID, quantity: 1 }),
+      });
+
+      if (!response.ok) {
+        setError("Failed to add item to cart");
+      }
+
+      const cart = await response.json();
+
+      if (!cart) {
+        setError("Failed to fetch cart data");
+        return;
+      }
+      const cartItemsMapp = cart.items.map(
+        ({ product, quantity }: { product: any; quantity: number }) => ({
+          productId: product._id,
+          title: product.title,
+          image: product.image,
+          quantity,
+          unitprice: product.unitPrice,
+        })
+      );
+
+      setCartItems([...cartItemsMapp]);
+      setTotalAmount(cart.totalAmount);
+      setError("");
+    } catch (error) {
+      console.error(error);
+      setError("An error occurred while adding item to cart");
+      setCartItems([]);
+    }
   };
 
   return (
