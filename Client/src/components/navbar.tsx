@@ -11,12 +11,14 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useAth } from "../context/Auth/AuthContext";
-import { Badge, Grid } from "@mui/material";
+import { Badge, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ShoppingCart from "@mui/icons-material/ShoppingCart";
+import { useCart } from "../context/cart/CartContext";
 
 function Navbar() {
   const { username, isAuthenticated, logout } = useAth();
+  const { cartItems } = useCart();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -53,22 +55,24 @@ function Navbar() {
               alignItems: "center",
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <AdbIcon sx={{ display: { md: "flex" }, mr: 1 }} />
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
-                sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                }}
-              >
-                TecHub
-              </Typography>
-            </Box>
+            <Button variant="text" sx={{color:"#fff"}} onClick={() => navigate("/")}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <AdbIcon sx={{ display: { md: "flex" }, mr: 1 }} />
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="a"
+                  sx={{
+                    mr: 2,
+                    display: { xs: "none", md: "flex" },
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                  }}
+                >
+                  TecHub
+                </Typography>
+              </Box>
+            </Button>
 
             <Box
               display={"flex"}
@@ -77,7 +81,7 @@ function Navbar() {
               alignItems={"center"}
             >
               <IconButton aria-label="cart" onClick={handleCart}>
-                <Badge badgeContent={4} color="warning">
+                <Badge badgeContent={cartItems.length} color="warning">
                   <ShoppingCart sx={{ color: "white" }} />
                 </Badge>
               </IconButton>
