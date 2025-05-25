@@ -103,12 +103,62 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const updatecart = async (productID: string, quantity: number) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/cart`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ productId: productID, quantity }),
+      });
+
+      if (!response.ok) {
+        setError("Failed to update cart");
+      }
+
+      const cart = await response.json();
+
+      if (!cart) {
+        setError("Failed to fetch cart data");
+        return;
+      }
+      const cartItemsMapp = cart.items.map(
+        ({
+          product,
+          quantity,
+          unitprice,
+        }: {
+          product: any;
+          quantity: number;
+          unitprice: number;
+        }) => ({
+          productId: product._id,
+          title: product.title,
+          image: product.image,
+          quantity,
+          unitprice,
+        })
+      );
+
+      setCartItems([...cartItemsMapp]);
+      settotalAmount(cart.totalamount);
+      setError("");
+    } catch (error) {
+      console.error(error);
+      setError("An error occurred while adding item to cart");
+      setCartItems([]);
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
         cartItems,
         totalamount,
         addItemToCart,
+        updatecart,
       }}
     >
       {children}

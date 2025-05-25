@@ -8,11 +8,16 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useCart } from "../context/cart/CartContext";
-import { useState } from "react";
 
 const Cart = () => {
-  const { cartItems, totalamount } = useCart();
-  const [error, setError] = useState("");
+  const { cartItems, totalamount, updatecart } = useCart();
+
+  const handleQuantity = (productId: string, quantity: number) => {
+    if (quantity < 1) {
+      return (quantity = 1); // Ensure quantity is at least 1
+    }
+    updatecart(productId, quantity);
+  };
 
   return (
     <Container sx={{ mt: 4 }}>
@@ -72,7 +77,9 @@ const Cart = () => {
                           aria-label="Basic button group"
                         >
                           <Button
-                            onClick={() => console.log("increase Quantity")}
+                            onClick={() =>
+                              handleQuantity(item.productId, item.quantity - 1)
+                            }
                           >
                             -
                           </Button>
@@ -86,7 +93,9 @@ const Cart = () => {
                             {item.quantity}
                           </Button>
                           <Button
-                            onClick={() => console.log("crease Quantity")}
+                            onClick={() =>
+                              handleQuantity(item.productId, item.quantity + 1)
+                            }
                           >
                             +
                           </Button>
@@ -104,17 +113,6 @@ const Cart = () => {
                       </TableCell>
                     </TableRow>
                   ))
-                )}
-                {error && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      align="center"
-                      style={{ color: "red" }}
-                    >
-                      {error}
-                    </TableCell>
-                  </TableRow>
                 )}
               </TableBody>
             </Table>
