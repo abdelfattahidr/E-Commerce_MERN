@@ -14,7 +14,7 @@ const RegistrePage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
-  const [password,setPassword] = useState<boolean>(false);
+  const [password, setPassword] = useState<boolean>(false);
 
   const { login } = useAth();
 
@@ -63,6 +63,8 @@ const RegistrePage = () => {
     }
 
     login(email, token);
+    setError("");
+    window.location.href = "/";
   };
   return (
     <Container>
@@ -111,31 +113,29 @@ const RegistrePage = () => {
           />
           <TextField
             inputRef={passwordRef}
-            type={password ?  "text": "password"}
+            type={password ? "text" : "password"}
             id="password"
             label="Password"
             variant="outlined"
-            />
+          />
           <TextField
             inputRef={passwordConfirmRef}
-            type={password ?  "text": "password"}
+            type={password ? "text" : "password"}
             id="outlined-basic"
             label="Confirm Password"
             variant="outlined"
           />
           <FormControlLabel
-                      control={<Checkbox id="ShowPassword" />}
-                      label="Show Password"
-                      onChange={
-                        (e) => {
-                          if (e.target.checked) {
-                            setPassword(true);
-                          } else {
-                            setPassword(false);
-                          }
-                        }
-                      }
-                    />
+            control={<Checkbox id="ShowPassword" />}
+            label="Show Password"
+            onChange={(e) => {
+              if (e.target.checked) {
+                setPassword(true);
+              } else {
+                setPassword(false);
+              }
+            }}
+          />
           <Button variant="contained" onClick={onSubmit}>
             Register
           </Button>

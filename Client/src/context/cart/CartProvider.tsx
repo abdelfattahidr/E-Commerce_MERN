@@ -7,7 +7,7 @@ import { useAth } from "../Auth/AuthContext";
 const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const { token } = useAth();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [totalamount, settotalAmount] = useState<number>(0);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -28,16 +28,25 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         const cart = await response.json();
 
         const cartItemsMapp = cart.items.map(
-          ({ product, quantity }: { product: any; quantity: number }) => ({
+          ({
+            product,
+            quantity,
+            unitprice,
+          }: {
+            product: any;
+            quantity: number;
+            unitprice: number;
+          }) => ({
             productId: product._id,
             title: product.title,
             image: product.image,
             quantity,
-            unitprice: product.unitPrice,
+            unitprice,
           })
         );
 
         setCartItems(cartItemsMapp);
+        settotalAmount(cart.totalamount);
       } catch (error) {
         setError("Error fetching cart:" + error);
       }
@@ -67,17 +76,25 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         return;
       }
       const cartItemsMapp = cart.items.map(
-        ({ product, quantity }: { product: any; quantity: number }) => ({
+        ({
+          product,
+          quantity,
+          unitprice,
+        }: {
+          product: any;
+          quantity: number;
+          unitprice: number;
+        }) => ({
           productId: product._id,
           title: product.title,
           image: product.image,
           quantity,
-          unitprice: product.unitPrice,
+          unitprice,
         })
       );
 
       setCartItems([...cartItemsMapp]);
-      setTotalAmount(cart.totalAmount);
+      settotalAmount(cart.totalamount);
       setError("");
     } catch (error) {
       console.error(error);
@@ -90,7 +107,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     <CartContext.Provider
       value={{
         cartItems,
-        totalAmount,
+        totalamount,
         addItemToCart,
       }}
     >

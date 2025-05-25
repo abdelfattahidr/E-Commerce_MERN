@@ -1,28 +1,39 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import { useState } from "react";
-import { useAth } from "../context/Auth/AuthContext";
 import { useCart } from "../context/cart/CartContext";
-
 const Cart = () => {
-  const { token } = useAth();
-  const { cartItems, totalAmount } = useCart();
+  const { cartItems, totalamount } = useCart();
   const [error, setError] = useState("");
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4">My Cart</Typography>
+      <Typography variant="h4" align="center">
+        My Cart
+      </Typography>
       {cartItems.length === 0 ? (
-        <Typography variant="h6">Your cart is empty</Typography>
+        <Typography variant="h6" align="center">
+          Your cart is empty
+        </Typography>
       ) : (
         <div>
           {cartItems.map((item) => (
-            <div key={item.productId} style={{ marginBottom: "20px" }}>
+            <Box
+              key={item.productId}
+              style={{ marginBottom: "20px" }}
+              display="flex"
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <img src={item.image} width={150} />
               <Typography variant="h6">{item.title}</Typography>
-              <Typography variant="body1">Price: ${item.unitprice}</Typography>
-            </div>
+              <Typography variant="body1">
+                {item.unitprice} $ X {item.quantity}
+              </Typography>
+            </Box>
           ))}
-          <Typography variant="h5">Total: ${totalAmount}</Typography>
+          <Typography variant="h5">Total: {totalamount}$</Typography>
         </div>
       )}
       <button>Checkout</button>

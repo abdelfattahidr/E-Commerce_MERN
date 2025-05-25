@@ -6,7 +6,7 @@ interface CreateCartForUser {
   userId: string;
 }
 const createCartForUser = async ({ userId }: CreateCartForUser) => {
-  const cart = await cartModel.create({ userId, totalAmount: 0 });
+  const cart = await cartModel.create({ userId, totalamount: 0 });
   await cart.save();
   return cart;
 };
@@ -40,7 +40,7 @@ interface ClearCart {
 export const clearCart = async ({ userId }: ClearCart) => {
   const cart = await getActiveCartForUser({ userId });
   cart.items = [];
-  cart.totalAmount = 0;
+  cart.totalamount = 0;
   const updatedCart = await cart.save();
   return { data: updatedCart, statusCode: 200 };
 };
@@ -76,11 +76,11 @@ export const addProductToCart = async ({
 
   cart.items.push({
     product: productId,
-    unitPrice: product.price,
+    unitprice: product.price,
     quantity,
   });
 
-  cart.totalAmount += product.price * quantity;
+  cart.totalamount += product.price * quantity;
 
   await cart.save();
   return {
@@ -123,11 +123,11 @@ export const updateProductToCart = async ({
     (p) => p.product.toString() !== productId
   );
 
-  let total = calculateTotalAmount({ cartItems: otherCartItems });
+  let total = calculateTotalamount({ cartItems: otherCartItems });
 
   existInCart.quantity = quantity;
-  total += existInCart.quantity * existInCart.unitPrice;
-  cart.totalAmount = total;
+  total += existInCart.quantity * existInCart.unitprice;
+  cart.totalamount = total;
 
   await cart.save();
   return {
@@ -158,10 +158,10 @@ export const deleteProductFromCart = async ({
     (p) => p.product.toString() !== productId
   );
 
-  let total = calculateTotalAmount({ cartItems: otherCartItems });
+  let total = calculateTotalamount({ cartItems: otherCartItems });
 
   cart.items = otherCartItems;
-  cart.totalAmount = total;
+  cart.totalamount = total;
 
   await cart.save();
   return {
@@ -170,9 +170,9 @@ export const deleteProductFromCart = async ({
   };
 };
 
-const calculateTotalAmount = ({ cartItems }: { cartItems: ICartItem[] }) => {
+const calculateTotalamount = ({ cartItems }: { cartItems: ICartItem[] }) => {
   const total = cartItems.reduce((acc, pro) => {
-    return (acc += pro.quantity * pro.unitPrice);
+    return (acc += pro.quantity * pro.unitprice);
   }, 0);
 
   return total;
@@ -202,7 +202,7 @@ export const checkout = async ({ userId, address }: checkout) => {
       productTitle: product.title,
       productImage: product.image,
       quantity: item.quantity,
-      unitPrice: item.unitPrice,
+      unitprice: item.unitprice,
     };
 
     orderItems.push(orderItem);
@@ -210,7 +210,7 @@ export const checkout = async ({ userId, address }: checkout) => {
 
   const order = await ordertModel.create({
     orderItems,
-    total: cart.totalAmount,
+    total: cart.totalamount,
     address,
     userId,
   });
