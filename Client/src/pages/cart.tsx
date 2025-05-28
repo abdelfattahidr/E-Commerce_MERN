@@ -10,13 +10,17 @@ import Paper from "@mui/material/Paper";
 import { useCart } from "../context/cart/CartContext";
 
 const Cart = () => {
-  const { cartItems, totalamount, updatecart } = useCart();
+  const { cartItems, totalamount, updatecart, removeItemFromCart } = useCart();
 
   const handleQuantity = (productId: string, quantity: number) => {
     if (quantity < 1) {
       return (quantity = 1); // Ensure quantity is at least 1
     }
     updatecart(productId, quantity);
+  };
+
+  const handlRemove = (productId: string) => {
+    removeItemFromCart(productId);
   };
 
   return (
@@ -70,6 +74,7 @@ const Cart = () => {
                         />
                       </TableCell>
                       <TableCell align="center">{item.title}</TableCell>
+                      <TableCell align="center">{}</TableCell>
                       <TableCell align="center">{item.unitprice} $</TableCell>
                       <TableCell align="center">
                         <ButtonGroup
@@ -104,8 +109,12 @@ const Cart = () => {
                       <TableCell align="center">
                         <ButtonGroup>
                           <Button
-                            onClick={() => console.log("Remove item")}
-                            sx={{ backgroundColor: "#f44336", color: "#fff" }}
+                            onClick={() => handlRemove(item.productId)}
+                            sx={{
+                              backgroundColor: "#f44336",
+                              color: "#fff",
+                              border: "none",
+                            }}
                           >
                             X
                           </Button>

@@ -40,6 +40,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
             productId: product._id,
             title: product.title,
             image: product.image,
+            stock: product.stock,
             quantity,
             unitprice,
           })
@@ -152,6 +153,56 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const removeItemFromCart = async (productID: string) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/cart/${productID}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        setError("Failed to Delete product frm cart");
+      }
+
+      const cart = await response.json();
+
+      if (!cart) {
+        setError("Failed to fetch cart data");
+        return;
+      }
+      const cartItemsMapp = cart.items.map(
+        ({
+          product,
+          quantity,
+          unitprice,
+        }: {
+          product: any;
+          quantity: number;
+          unitprice: number;
+        }) => ({
+          productId: product._id,
+          title: product.title,
+          image: product.image,
+          quantity,
+          unitprice,
+        })
+      );
+
+      setCartItems([...cartItemsMapp]);
+      settotalAmount(cart.totalamount);
+      setError("");
+    } catch (error) {
+      console.error(error);
+      setError("An error for delete cart");
+      setCartItems([]);
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -159,6 +210,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         totalamount,
         addItemToCart,
         updatecart,
+        removeItemFromCart,
       }}
     >
       {children}
