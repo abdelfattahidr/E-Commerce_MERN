@@ -43,20 +43,16 @@ router.put("/", validateJWT, async (req: ExtendRequest, res) => {
   }
 });
 
-router.delete(
-  "/items/:productId",
-  validateJWT,
-  async (req: ExtendRequest, res) => {
-    try {
-      const userId = req?.user?._id;
-      const { productId } = req.params;
-      const response = await deleteProductFromCart({ userId, productId });
-      res.status(response.statusCode).json(response.data);
-    } catch (error) {
-      res.status(500).json("Something went wrong ! :)");
-    }
+router.delete("/:productId", validateJWT, async (req: ExtendRequest, res) => {
+  try {
+    const userId = req?.user?._id;
+    const { productId } = req.params;
+    const response = await deleteProductFromCart({ userId, productId });
+    res.status(response.statusCode).json(response.data);
+  } catch (error) {
+    res.status(500).json("Something went wrong ! :)");
   }
-);
+});
 
 router.delete("/", validateJWT, async (req: ExtendRequest, res) => {
   try {
