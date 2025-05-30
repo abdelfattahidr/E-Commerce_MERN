@@ -10,12 +10,14 @@ import Paper from "@mui/material/Paper";
 import { useCart } from "../context/cart/CartContext";
 
 const Cart = () => {
-  const { cartItems, totalamount, updatecart, removeItemFromCart } = useCart();
+  const { cartItems, totalamount, updatecart, removeItemFromCart, clearCart } =
+    useCart();
 
   const handleQuantity = (productId: string, quantity: number) => {
     if (quantity < 1) {
       return (quantity = 1); // Ensure quantity is at least 1
     }
+
     updatecart(productId, quantity);
   };
 
@@ -60,7 +62,7 @@ const Cart = () => {
                     colSpan={5}
                     sx={{ fontWeight: "bold" }}
                   >
-                    Your cart is empty
+                    Your cart is empty , start shopping and add products to cart
                   </TableCell>
                 ) : (
                   cartItems.map((item) => (
@@ -82,6 +84,7 @@ const Cart = () => {
                           aria-label="Basic button group"
                         >
                           <Button
+                            disabled={item.quantity === 1}
                             onClick={() =>
                               handleQuantity(item.productId, item.quantity - 1)
                             }
@@ -98,12 +101,24 @@ const Cart = () => {
                             {item.quantity}
                           </Button>
                           <Button
+                            disabled={item.quantity === item.stock}
                             onClick={() =>
                               handleQuantity(item.productId, item.quantity + 1)
                             }
                           >
                             +
                           </Button>
+                          {/* {item.quantity === item.stock ? (
+                            <Typography
+                              variant="h6"
+                              align="center"
+                              fontSize={"15px"}
+                            >
+                              Product out of stock
+                            </Typography>
+                          ) : (
+                            ""
+                          )} */}
                         </ButtonGroup>
                       </TableCell>
                       <TableCell align="center">
@@ -125,22 +140,49 @@ const Cart = () => {
                 )}
               </TableBody>
             </Table>
+            {cartItems.length !== 0 ? (
+              <Box
+                display={"flex"}
+                flexDirection={"row"}
+                justifyContent={"end"}
+              >
+                <Button
+                  disabled={cartItems.length === 0}
+                  variant="contained"
+                  onClick={() => clearCart()}
+                  sx={{
+                    m: 2,
+                    backgroundColor: "#f44336",
+                    color: "#fff",
+                    border: "none",
+                  }}
+                >
+                  clear Cart
+                </Button>
+              </Box>
+            ) : (
+              ""
+            )}
           </TableContainer>
         </Box>
 
-        <Box sx={{ mt: 2, textAlign: "center" }}>
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            Total Amount: {totalamount} $
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-            onClick={() => console.log("Proceed to Checkout")}
-          >
-            Proceed to Checkout
-          </Button>
-        </Box>
+        {totalamount === 0 ? (
+          ""
+        ) : (
+          <Box sx={{ mt: 2, textAlign: "center" }}>
+            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+              Total Amount: {totalamount} $
+            </Typography>
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ mt: 2 }}
+              onClick={() => console.log("Proceed to Checkout")}
+            >
+              Proceed to Checkout
+            </Button>
+          </Box>
+        )}
       </Box>
     </Container>
   );

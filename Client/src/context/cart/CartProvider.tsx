@@ -89,6 +89,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
           productId: product._id,
           title: product.title,
           image: product.image,
+          stock: product.stock,
           quantity,
           unitprice,
         })
@@ -138,6 +139,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
           productId: product._id,
           title: product.title,
           image: product.image,
+          stock: product.stock,
           quantity,
           unitprice,
         })
@@ -188,6 +190,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
           productId: product._id,
           title: product.title,
           image: product.image,
+          stock: product.stock,
           quantity,
           unitprice,
         })
@@ -195,6 +198,32 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 
       setCartItems([...cartItemsMapp]);
       settotalAmount(cart.totalamount);
+      setError("");
+    } catch (error) {
+      console.error(error);
+      setError("An error for delete cart");
+      setCartItems([]);
+    }
+  };
+
+  const clearCart = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/cart`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        setError("Failed to empty cart");
+      }
+      const cart = await response.json();
+      if (!cart) {
+        setError("Failed to fetch cart data");
+        return;
+      }
+      setCartItems([]);
+      settotalAmount(0);
       setError("");
     } catch (error) {
       console.error(error);
@@ -211,6 +240,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         addItemToCart,
         updatecart,
         removeItemFromCart,
+        clearCart,
       }}
     >
       {children}
