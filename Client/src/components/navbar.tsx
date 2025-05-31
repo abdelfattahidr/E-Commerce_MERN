@@ -15,7 +15,7 @@ import { Badge, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ShoppingCart from "@mui/icons-material/ShoppingCart";
 import { useCart } from "../context/cart/CartContext";
-
+import user from "/public/user.jpg";
 function Navbar() {
   const { username, isAuthenticated, logout } = useAth();
   const { cartItems } = useCart();
@@ -55,7 +55,11 @@ function Navbar() {
               alignItems: "center",
             }}
           >
-            <Button variant="text" sx={{color:"#fff"}} onClick={() => navigate("/")}>
+            <Button
+              variant="text"
+              sx={{ color: "#fff" }}
+              onClick={() => navigate("/")}
+            >
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <AdbIcon sx={{ display: { md: "flex" }, mr: 1 }} />
                 <Typography
@@ -99,10 +103,7 @@ function Navbar() {
                       </Grid>
                       <Grid>
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                          <Avatar
-                            alt={username || ""}
-                            src="/static/images/avatar/2.jpg"
-                          />
+                          <Avatar alt={username || ""} src={user} />
                         </IconButton>
                       </Grid>
                     </Grid>

@@ -8,11 +8,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useCart } from "../context/cart/CartContext";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { cartItems, totalamount, updatecart, removeItemFromCart, clearCart } =
     useCart();
 
+  const Navigate = useNavigate();
   const handleQuantity = (productId: string, quantity: number) => {
     if (quantity < 1) {
       return (quantity = 1); // Ensure quantity is at least 1
@@ -49,6 +51,9 @@ const Cart = () => {
                     Quantity
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    totale amount for one product
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Action
                   </TableCell>
                 </TableRow>
@@ -76,7 +81,6 @@ const Cart = () => {
                         />
                       </TableCell>
                       <TableCell align="center">{item.title}</TableCell>
-                      <TableCell align="center">{}</TableCell>
                       <TableCell align="center">{item.unitprice} $</TableCell>
                       <TableCell align="center">
                         <ButtonGroup
@@ -120,6 +124,9 @@ const Cart = () => {
                             ""
                           )} */}
                         </ButtonGroup>
+                      </TableCell>
+                      <TableCell align="center">
+                        {item.unitprice * item.quantity} $
                       </TableCell>
                       <TableCell align="center">
                         <ButtonGroup>
@@ -174,10 +181,10 @@ const Cart = () => {
               Total Amount: {totalamount} $
             </Typography>
             <Button
+              sx={{ mt: 2 }}
               variant="contained"
               color="success"
-              sx={{ mt: 2 }}
-              onClick={() => console.log("Proceed to Checkout")}
+              onClick={() => Navigate("/checkout")}
             >
               Proceed to Checkout
             </Button>
