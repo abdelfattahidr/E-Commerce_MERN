@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import Table from "@mui/material/Table";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
@@ -8,15 +9,59 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useCart } from "../context/cart/CartContext";
-import { useRef } from "react";
+import { useAth } from "../context/Auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
+  const { token } = useAth();
+  const navigate = useNavigate();
   const { cartItems, totalamount } = useCart();
-  const addresseRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
   const cardRef = useRef<HTMLInputElement>(null);
   const cvvRef = useRef<HTMLInputElement>(null);
+
+  const handleCheckout = async () => {
+    const address = addressRef.current?.value;
+    const phone = phoneRef.current?.value;
+    const date = dateRef.current?.value;
+    const card = cardRef.current?.value;
+    const cvv = cvvRef.current?.value;
+
+    if (!address || !phone || !date || !card || !cvv) {
+      alert("Please fill in all fields");
+      return;
+    }
+    if (isNaN(Number(phone)) || isNaN(Number(card)) || isNaN(Number(cvv))) {
+      alert("Phone, Card Number, and CVV must be numeric values");
+      return;
+    }
+    //todo_ add another information for payment
+    // const paymentDetails = {
+    //   address,
+    //   phone,
+    //   date,
+    //   card,
+    //   cvv,
+    // };
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/cart/checkout`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ address }),
+      }
+    );
+
+    if (!response.ok) return;
+
+    navigate("/success");
+  };
 
   return (
     <Container sx={{ mt: 4 }}>
@@ -44,54 +89,35 @@ const Checkout = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cartItems.length === 0 ? (
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    align="center"
-                    colSpan={5}
-                    sx={{ fontWeight: "bold" }}
-                  >
-                    Your cart is empty , start shopping and add products to cart
-                  </TableCell>
-                ) : (
-                  cartItems.map((item) => (
-                    <TableRow key={item.productId}>
-                      <TableCell align="center">
-                        <img
-                          src={item.image}
-                          width={100}
-                          alt={item.title}
-                          style={{ borderRadius: "10px" }}
-                        />
-                      </TableCell>
-                      <TableCell align="center">{item.title}</TableCell>
-                      <TableCell align="center">{item.quantity}</TableCell>
-                      <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                        {item.quantity * item.unitprice} $
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                {cartItems.map((item) => (
+                  <TableRow key={item.productId}>
+                    <TableCell align="center">
+                      <img
+                        src={item.image}
+                        width={100}
+                        alt={item.title}
+                        style={{ borderRadius: "10px" }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">{item.title}</TableCell>
+                    <TableCell align="center">{item.quantity}</TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      {item.quantity * item.unitprice} $
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
-            {totalamount > 0 && (
-              <Box
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"end"}
-              >
-                <Typography variant="h6" sx={{ m: 4, fontWeight: "bold" }}>
-                  Total Amount: {totalamount} $
-                </Typography>
-              </Box>
-            )}
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"end"}>
+              <Typography variant="h6" sx={{ m: 4, fontWeight: "bold" }}>
+                Total Amount: {totalamount} $
+              </Typography>
+            </Box>
           </TableContainer>
         </Box>
         <Box
           sx={{
             width: "400px",
-            mt: 4,
             p: 3,
             borderRadius: "10px",
             boxShadow: 3,
@@ -112,19 +138,19 @@ const Checkout = () => {
               fullWidth
               label="address"
               variant="outlined"
-              ref={addresseRef}
+              inputRef={addressRef}
             />
             <TextField
               fullWidth
               label="Phone Number"
               variant="outlined"
-              ref={phoneRef}
+              inputRef={phoneRef}
             />
             <TextField
               fullWidth
               label="Card Number"
               variant="outlined"
-              ref={cardRef}
+              inputRef={cardRef}
             />
             <TextField
               fullWidth
@@ -132,11 +158,21 @@ const Checkout = () => {
               variant="outlined"
               type="date"
               InputLabelProps={{ shrink: true }}
-              inputProps={{ min: new Date().toISOString().split("t")[0] }}
-              ref={dateRef}
+              inputRef={dateRef}
             />
-            <TextField fullWidth label="CVV" variant="outlined"  ref={cvvRef}/>
-            <Button variant="contained" color="success" size="large" fullWidth>
+            <TextField
+              fullWidth
+              label="CVV"
+              variant="outlined"
+              inputRef={cvvRef}
+            />
+            <Button
+              variant="contained"
+              color="success"
+              size="large"
+              fullWidth
+              onClick={handleCheckout}
+            >
               Pay Now
             </Button>
           </Box>

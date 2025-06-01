@@ -1,8 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import RegisterPage from "./pages/auth/RegistrePage";
-import { Home, Cart, Checkout, Blocked } from "./pages/index";
+import {
+  Home,
+  Cart,
+  Checkout,
+  Blocked,
+  OrderSucces,
+  Login,
+  Registre, // Corrected typo from "Registre" to "Register",
+} from "./pages/index";
 import DefaultLayout from "./layout/DefaultLayout";
-import LoginPage from "./pages/auth/loginPage";
 import ProtectedRoute from "./components/ProtedRroute";
 import CartProvider from "./context/cart/CartProvider";
 
@@ -31,6 +37,10 @@ const router = createBrowserRouter([
         path: "/checkout",
         element: <Checkout />,
       },
+      {
+        path: "/success",
+        element: <OrderSucces />,
+      },
     ],
   },
   {
@@ -38,12 +48,12 @@ const router = createBrowserRouter([
     element: <DefaultLayout />,
     children: [
       {
-        path: "register",
-        element: <RegisterPage />,
+        path: "registre",
+        element: <Registre />,
       },
       {
         path: "login",
-        element: <LoginPage />,
+        element: <Login />,
       },
     ],
   },

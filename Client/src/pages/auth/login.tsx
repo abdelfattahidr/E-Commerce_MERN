@@ -2,49 +2,39 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import { useRef, useState } from "react";
 import { useAth } from "../../context/Auth/AuthContext";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { FormControlLabel } from "@mui/material";
 
-const RegistrePage = () => {
+const Login = () => {
   const [error, setError] = useState("");
-  const FNameRef = useRef<HTMLInputElement>(null);
-  const LNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const passwordConfirmRef = useRef<HTMLInputElement>(null);
-  const [password, setPassword] = useState<boolean>(false);
-
+  const navigate = useNavigate();
   const { login } = useAth();
 
   const onSubmit = async () => {
-    const firstName = FNameRef.current?.value;
-    const lastName = LNameRef.current?.value;
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
-    const passwordConfirm = passwordConfirmRef.current?.value;
 
-    if (!firstName || !lastName || !email || !passwordConfirm) {
+    if (!email || !password) {
       setError("Please fill all fields");
       return;
-    }
-
-    if (password !== passwordConfirm) {
-      setError("confirm your password");
-      return;
+    } else {
+      setError("");
     }
 
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/users/register`,
+      `${import.meta.env.VITE_API_URL}/users/login`,
       {
         method: "Post",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstName,
-          lastName,
           email,
           password,
         }),
@@ -52,7 +42,7 @@ const RegistrePage = () => {
     );
 
     if (!response.ok) {
-      setError("Unable to register user");
+      setError("Unable to login user");
       return;
     }
 
@@ -63,8 +53,7 @@ const RegistrePage = () => {
     }
 
     login(email, token);
-    setError("");
-    window.location.href = "/";
+    navigate("/");
   };
   return (
     <Container>
@@ -74,18 +63,21 @@ const RegistrePage = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          mt: 2,
+          mt: 4,
         }}
       >
-        <Typography variant="h4">Register new Account</Typography>
+        <Typography variant="h4">Login</Typography>
         {error && (
-          <Typography variant="h6" sx={{ color: "red", textAlign: "center" }}>
+          <Typography
+            variant="h6"
+            sx={{ color: "red", textAlign: "center", justifyContent: "center" }}
+          >
             {error}
           </Typography>
         )}
         <Box
           sx={{
-            mt: 2,
+            mt: 3,
             display: "flex",
             flexDirection: "column",
             gap: 1,
@@ -94,18 +86,6 @@ const RegistrePage = () => {
           }}
         >
           <TextField
-            inputRef={FNameRef}
-            id="firstname"
-            label="First Name"
-            variant="outlined"
-          />
-          <TextField
-            inputRef={LNameRef}
-            id="lastname"
-            label="Last Name"
-            variant="outlined"
-          />
-          <TextField
             inputRef={emailRef}
             id="email"
             label="Email"
@@ -113,16 +93,9 @@ const RegistrePage = () => {
           />
           <TextField
             inputRef={passwordRef}
-            type={password ? "text" : "password"}
+            type="password"
             id="password"
             label="Password"
-            variant="outlined"
-          />
-          <TextField
-            inputRef={passwordConfirmRef}
-            type={password ? "text" : "password"}
-            id="outlined-basic"
-            label="Confirm Password"
             variant="outlined"
           />
           <FormControlLabel
@@ -130,18 +103,18 @@ const RegistrePage = () => {
             label="Show Password"
             onChange={(e) => {
               if (e.target.checked) {
-                setPassword(true);
+                passwordRef.current?.setAttribute("type", "text");
               } else {
-                setPassword(false);
+                passwordRef.current?.setAttribute("type", "password");
               }
             }}
           />
           <Button variant="contained" onClick={onSubmit}>
-            Register
+            Login
           </Button>
           <Typography variant="h6">
             <p>
-              Already have an account ? <a href="/auth/login"> Login here</a>
+              Don't have an account? <a href="/auth/registre"> Register here</a>
             </p>
           </Typography>
         </Box>
@@ -150,4 +123,4 @@ const RegistrePage = () => {
   );
 };
 
-export default RegistrePage;
+export default Login;
