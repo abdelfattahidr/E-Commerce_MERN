@@ -12,6 +12,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     localStorage.getItem(TOKEN_KEY)
   );
   const isAuthenticated = !!token;
+  const [myorders, setMyOrders] = useState([]);
 
   const login = (username: string, token: string) => {
     setUsername(username);
@@ -26,10 +27,33 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     setUsername(null);
     setToken(null);
   };
+  const getmyorders = async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/users/orders`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) return;
+    const data = await response.json();
+    setMyOrders(data);
+  };
 
   return (
     <AuthContext.Provider
-      value={{ username, token, isAuthenticated, login, logout }}
+      value={{
+        username,
+        token,
+        isAuthenticated,
+        login,
+        logout,
+        getmyorders,
+        myorders,
+      }}
     >
       {children}
     </AuthContext.Provider>

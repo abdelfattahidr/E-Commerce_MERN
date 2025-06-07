@@ -6,6 +6,7 @@ const OrderSucces = () => {
   const navigate = useNavigate();
   const handleHome = () => {
     navigate("/");
+    window.location.reload();
   };
   return (
     <Container

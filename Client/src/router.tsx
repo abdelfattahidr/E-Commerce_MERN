@@ -6,7 +6,8 @@ import {
   Blocked,
   OrderSucces,
   Login,
-  Registre, // Corrected typo from "Registre" to "Register",
+  Registre,
+  Orders,
 } from "./pages/index";
 import DefaultLayout from "./layout/DefaultLayout";
 import ProtectedRoute from "./components/ProtedRroute";
@@ -40,6 +41,16 @@ const router = createBrowserRouter([
       {
         path: "/success",
         element: <OrderSucces />,
+      },
+    ],
+  },
+  {
+    path: "/profile",
+    element: <DefaultLayout />,
+    children: [
+      {
+        path: "orders",
+        element: <Orders />,
       },
     ],
   },
